@@ -11,7 +11,19 @@ xtwone3four
 zoneight234
 7pqrstsixteen
 `
-const replaceNumericSubStringsWithNumbers = (string) => {
+
+const pickedTestString = `
+5vnntgqnrpjh537ninebbkcs6
+asdasdkthreeaskjhasd
+onejgnvdndtwoqpdxbnzhkg91sevenrfgv,
+onesevenfivefour5four413
+`
+
+/**
+ * @param {string} stringFragment
+ * @returns {number|null}
+ */
+const getNumberFragment = stringFragment => {
     const numericStrings = [
         'one',
         'two',
@@ -23,13 +35,43 @@ const replaceNumericSubStringsWithNumbers = (string) => {
         'eight',
         'nine'
     ]
-    let newString = string
-    numericStrings.forEach((number, index) => (newString = newString.replace(number, index + 1)))
-    return newString
+
+    if(/\d/.test(stringFragment)) {
+        return stringFragment.match(/\d/)[0]
+    }
+
+    for(let i = 0; i < numericStrings.length; i++) {
+        const hasNumber = new RegExp(`${numericStrings[i]}`).test(stringFragment)
+        if(hasNumber) return i + 1
+    }
+
+    return null
 }
+
+const buildFragments = (string) => {
+    const initialChars = string.split('')
+    let builtString = ''
+    let currentString = ''
+    let stringFragments = []
+
+    for(let i = 0; i < initialChars.length; i++) {
+        builtString += initialChars[i]
+        currentString += initialChars[i]
+
+        const numberFragment = getNumberFragment(currentString)
+        if(numberFragment) {
+            stringFragments.push(numberFragment)
+            currentString = ''
+        }
+    }
+
+    return stringFragments.join('')
+}
+
 const toCalibrationArray = string => string.trim().split('\n')
+
 const getCalibrationValue = string => {
-    const { firstValue, lastValue } = replaceNumericSubStringsWithNumbers(string)
+    const { firstValue, lastValue } = buildFragments(string)
         .split('')
         .reduce((acc, cur) => {
             if(!parseInt(cur)) return acc
@@ -42,15 +84,19 @@ const getCalibrationValue = string => {
 
             return {...acc, lastValue: cur}
         }, {})
-    console.log({ firstValue, lastValue })
+    console.log(firstValue, lastValue)
     return parseInt(firstValue + lastValue)
 }
+
 const getSumOfCalibrationValues = string => toCalibrationArray(string)
     .map(getCalibrationValue)
     .reduce((acc, current) => acc + current, 0)
 
-const testResults = getSumOfCalibrationValues(exampleString)
-console.log(testResults)
+// const testResults = getSumOfCalibrationValues(exampleString)
+// console.log(testResults)
 
-// const results = getSumOfCalibrationValues(puzzleInput)
-// console.log(results)
+const pickedResults = getSumOfCalibrationValues(pickedTestString)
+console.log(pickedResults)
+
+const results = getSumOfCalibrationValues(puzzleInput)
+console.log(results)
