@@ -17,6 +17,7 @@ const pickedTestString = `
 asdasdkthreeaskjhasd
 onejgnvdndtwoqpdxbnzhkg91sevenrfgv,
 onesevenfivefour5four413
+eightwoasdjhkasjd
 `
 
 /**
@@ -48,52 +49,31 @@ const getNumberFragment = stringFragment => {
     return null
 }
 
-const buildFragments = (string) => {
+const findNumber = (string, reversed = false) => {
     const initialChars = string.split('')
     let builtString = ''
-    let currentString = ''
-    let stringFragments = []
 
     for(let i = 0; i < initialChars.length; i++) {
-        builtString += initialChars[i]
-        currentString += initialChars[i]
-
-        const numberFragment = getNumberFragment(currentString)
-        if(numberFragment) {
-            stringFragments.push(numberFragment)
-            currentString = ''
-        }
+        builtString = reversed ?
+            initialChars[initialChars.length - 1 - i] + builtString : 
+            builtString + initialChars[i]
+        const numberFragment = getNumberFragment(builtString)
+        if(numberFragment) return String(numberFragment)
     }
 
-    return stringFragments.join('')
+    return null
 }
 
 const toCalibrationArray = string => string.trim().split('\n')
 
-const getCalibrationValue = string => {
-    const { firstValue, lastValue } = buildFragments(string)
-        .split('')
-        .reduce((acc, cur) => {
-            if(!parseInt(cur)) return acc
-            if(!acc.firstValue) {
-                return {
-                    firstValue: cur,
-                    lastValue: cur
-                }
-            }
-
-            return {...acc, lastValue: cur}
-        }, {})
-    console.log(firstValue, lastValue)
-    return parseInt(firstValue + lastValue)
-}
+const getCalibrationValue = string => parseInt(findNumber(string) + findNumber(string, true))
 
 const getSumOfCalibrationValues = string => toCalibrationArray(string)
     .map(getCalibrationValue)
     .reduce((acc, current) => acc + current, 0)
 
-// const testResults = getSumOfCalibrationValues(exampleString)
-// console.log(testResults)
+const testResults = getSumOfCalibrationValues(exampleString)
+console.log(testResults)
 
 const pickedResults = getSumOfCalibrationValues(pickedTestString)
 console.log(pickedResults)
