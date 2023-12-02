@@ -10,48 +10,6 @@ Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 `.trim()
 
-
-// const MAX_CUBES = {
-//     r: 12,
-//     g: 13,
-//     b: 14
-// }
-
-// const isValidGame = (roundsString) => {
-//     const regexps = {
-//         r: /(\d+)\sred/g,
-//         g: /(\d+)\sgreen/g,
-//         b: /(\d+)\sblue/g
-//     }
-//     const getInvalidValues = (regexp, limit) => Array.from(roundsString.matchAll(regexp))
-//         .filter(matches => limit < matches[1])
-
-//     if(
-//         getInvalidValues(regexps.r, MAX_CUBES.r).length > 0 ||
-//         getInvalidValues(regexps.b, MAX_CUBES.b).length > 0 ||
-//         getInvalidValues(regexps.g, MAX_CUBES.g).length > 0
-//     ) {
-//         return false
-//     }
-    
-//     return true
-// }
-
-// const getGameId = (game) => {
-//     return game.match(/Game\s(\d+)/)[1]
-// }
-
-// const getSumOfValidGames = (gameString) => gameString.split('\n')
-//     .filter(game => isValidGame(game))
-//     .reduce((acc, tar) => acc + parseInt(getGameId(tar)), 0)
-
-// console.log(
-//     getSumOfValidGames(exampleGames)
-// )
-
-// console.log(getSumOfValidGames(puzzleInput))
-
-
 const getRequiredCubesPerColor = gameString => {
     const regexps = {
         r: /(\d+)\sred/g,
