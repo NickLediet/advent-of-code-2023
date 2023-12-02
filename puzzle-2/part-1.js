@@ -1,4 +1,6 @@
-
+const path = require('path')
+const { readFileSync } = require('fs')
+const puzzleInput = readFileSync(path.resolve('.', 'puzzle-2', 'input.txt')).toString()
 
 const exampleGames = `
 Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
@@ -15,25 +17,43 @@ const MAX_CUBES = {
     b: 14
 }
 
-function Game(id, rounds) {
-    this.id = id
-    this.rounds = rounds
+const isValidGame = (roundsString) => {
+    const regexps = {
+        r: /(\d+)\sred/g,
+        g: /(\d+)\sgreen/g,
+        b: /(\d+)\sblue/g
+    }
+    const getInvalidValues = (regexp, limit) => Array.from(roundsString.matchAll(regexp))
+        .filter(matches => limit < matches[1])
+
+    if(
+        getInvalidValues(regexps.r, MAX_CUBES.r).length > 0 ||
+        getInvalidValues(regexps.b, MAX_CUBES.b).length > 0 ||
+        getInvalidValues(regexps.g, MAX_CUBES.g).length > 0
+    ) {
+        return false
+    }
+    
+    return true
 }
 
-function HighestRound(r, g, b) {
-    this.r = r
-    this.g = g
-    this.b = b
+const getGameId = (game) => {
+    return game.match(/Game\s(\d+)/)[1]
 }
 
+const getSumOfValidGames = (gameString) => gameString.split('\n')
+    .filter(game => isValidGame(game))
+    .reduce((acc, tar) => acc + parseInt(getGameId(tar)), 0)
 
-/**
- * - split game into it's header and rounds
- * - split rounds into and array
- * - loop over the rounds and find the highest values of r, g, b
- * - construct a game object using the ID and the rounds 
- */
+console.log(
+    getSumOfValidGames(exampleGames)
+)
 
-const createGamesArray = (gamesString) => gamesString.split('\n')
+console.log(getSumOfValidGames(puzzleInput))
 
-console.log(createGamesArray(exampleGames))
+// console.log(
+//     puzzleInput.split('\n')
+//         .filter(game => (isValidGame(game)))
+//         .map(game => parseInt(getGameId(game)))
+//         // .reduce((sum, t) => t + sum, 0)
+// )
