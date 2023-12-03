@@ -1,5 +1,5 @@
 const path = require('path')
-const { readFileSync } = require('fs')
+const { readFileSync, writeFileSync } = require('fs')
 const puzzleInput = readFileSync(path.resolve('.', 'puzzle-3', 'input.txt')).toString()
 const exampleString = `
 467..114..
@@ -20,8 +20,8 @@ const checkRow = (schematicLine, start, end) => {
     if(!numberMatches) return []
     return numberMatches.filter(numberMatch => {
         const numberMatchStartIndex = numberMatch.index
-        const numberMatchEndIndex = numberMatchStartIndex + numberMatch.length + 1
-
+        const numberMatchEndIndex = numberMatchStartIndex + numberMatch[0].length - 1
+        
         return (numberMatchStartIndex >= start && numberMatchStartIndex <= end) ||
             (numberMatchEndIndex >= start && numberMatchEndIndex <= end)
     }).map(match => match[0])
@@ -68,7 +68,6 @@ const checkAdjacentSymbols = ({start, index, schematicLines, schematicLine}) => 
     }
     
     const isValidGear = foundNumbers.length === 2
-
     return [isValidGear, foundNumbers]
 }
 
