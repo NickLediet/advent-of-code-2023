@@ -164,7 +164,7 @@ const getSpecificSeedConversions = (string, seedNumber) => {
     return locationNumbers
 }
 
-console.log(getLowestSeedDestination(exampleString))
+console.log(getLowestSeedDestination(puzzleInput))
 
 // console.log(getSpecificSeedConversions(exampleString, 79))
 
