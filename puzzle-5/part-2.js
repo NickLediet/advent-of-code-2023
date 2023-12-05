@@ -65,12 +65,9 @@ const createMapOfMaps = (mapString) => {
     }, {})
 }
 
-const inRange = (inputStart, inputRange, sourceStart, sourceRange) => 
-    (inputStart >= sourceStart) || ((inputStart + inputRange) <= (sourceStart + sourceRange))
-
-const getConvertFunction = (map, typeKey, [inputStart, inputRange]) => {
+const getConvertFunction = (map, typeKey, source) => {
     const matchingRange = map[typeKey].filter(
-        ({ sourceStart, sourceEnd, range}) => inRange()
+        ({ sourceStart, sourceEnd, range}) => source >= sourceStart && source <= sourceEnd
     )
     if(!matchingRange.length) {
         return source
@@ -114,39 +111,38 @@ const createInvertedMap = (map) => {
             return acc
         }, {})
 }
-
+// const getSeedEndPoints
+const inSeedRange = (seeds, s) => {
+    return seeds.some((currentSeed) => {
+        return currentSeed[0] <= s && s <= currentSeed[1]
+    })
+}
 const getLowestSeedDestination = (almanac) => {
     const [seedsString, ...mapLines] = almanac.split('\n')
-    // const seeds = Array.from(seedsString.matchAll(/\d+/g))
-    //     .map(s => parseInt(s))
-    //     // Return tuples of starting seed value and range
-    //     .reduce((acc, cur) =>  {
-    //         const lastElementHasSpace = acc.length && acc[acc.length - 1].length === 1
-    //         if(lastElementHasSpace) {
-    //             acc[acc.length - 1].push(cur)
-    //             return acc
-    //         }
+    const seeds = Array.from(seedsString.matchAll(/\d+/g))
+        .map(s => parseInt(s))
+        // Return tuples of starting seed value and range
+        .reduce((acc, cur) =>  {
+            const lastElementHasSpace = acc.length && acc[acc.length - 1].length === 1
+            if(lastElementHasSpace) {
+                acc[acc.length - 1].push(cur)
+                return acc
+            }
 
-    //         acc.push([cur])
-    //         return acc
-    //     }, [])
-    //     .reduce((acc, [seedStart, seedRange]) => {
-    //         let seedsToAdd = []
-    //         for(let i = parseInt(seedStart); i < seedStart + seedRange; i++) {
-    //             seedsToAdd.push(i)
-    //         }
-            
-    //         return [...acc, ...seedsToAdd]
-    //     }, [])
- 
+            acc.push([cur])
+            return acc
+        }, [])
     const mapOfMaps = createMapOfMaps(mapLines.join('\n'))
-    // console.log(mapOfMaps)
     const invertedMap = createInvertedMap(mapOfMaps)
-    console.log(invertedMap)
-    return;
-    const locationNumbers = seeds.map(
+    const seedEndpoints = seeds.map(seed => [seed[0], seed[0] + seed[1] - 1])
+    const firstMapKey = Object.keys(invertedMap).reverse()[0]
+    const validSoilValues = invertedMap[firstMapKey].filter(s => inSeedRange(seedEndpoints, s))
+
+    const locationNumbers = validSoilValues.map(
         (seed) => Object.keys(mapOfMaps).reduce(
-            (convertedValue, key) => getConvertFunction(mapOfMaps, key, convertedValue), seed
+            (convertedValue, key) => {
+                return getConvertFunction(mapOfMaps, key, convertedValue)
+            }, seed
         )
     )
     return locationNumbers.sort((a,b) => a - b)[0]
