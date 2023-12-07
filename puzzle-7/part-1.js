@@ -16,7 +16,7 @@ QQQJA 483
  * - quick sort values
  */
 
-const CARDS_IN_ORDER = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2'].reverse()
+const CARDS_IN_ORDER = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'].reverse()
 const HAND_TYPE_MAP = {
     '5OAK': {
         name: 'Five of a kind',
@@ -73,7 +73,7 @@ function getHandDetails ([cards, bet]) {
     Object.keys(HAND_TYPE_MAP).reverse()
         .forEach((htk) => {
             const isOfType = HAND_TYPE_MAP[htk].callback(cardIndexMap)
-            
+            console.log()
             if(isOfType) {
                 curretHandType = htk
                 if(htk === '5OAK') console.log('This cards is 50AK: ', cards)
@@ -85,10 +85,13 @@ function getHandDetails ([cards, bet]) {
 function checkCardScore (a, b) {
     const cardsArrayA = a.cardsArray
     const cardsArrayB = b.cardsArray
-
+    const aSubstring = []
+    const bSubstring = []
+    const checkIfAIsHigher = (aChar, bChar) => CARDS_IN_ORDER.indexOf(aChar) + 1 > CARDS_IN_ORDER.indexOf(bChar) + 1
     for(let i = 0; i < cardsArrayA.length; i++) {
         if(cardsArrayA[i] === cardsArrayB[i]) continue
-        return CARDS_IN_ORDER.indexOf(cardsArrayA[i]) - CARDS_IN_ORDER.indexOf(cardsArrayB[i])
+        const isAHigher = checkIfAIsHigher(cardsArrayA[i], cardsArrayB[i])
+        return isAHigher ? 1 : -1
     }
     return 0
 }
@@ -133,8 +136,6 @@ function getScoreAndRank(cards) {
     }, [])
     return winningsAndRanks
 }
-
-
 
 function getTotalWinnings(handsString) {
     const hands = handsString.split('\n').map(s => s.split(' '))
