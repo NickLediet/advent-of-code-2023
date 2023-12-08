@@ -13,35 +13,25 @@ GGG = (GGG, GGG)
 ZZZ = (ZZZ, ZZZ)
 `.trim()
 
-// const exampleString2 = `
-// LLR
+const exampleString2 = `
+LLR
 
-// AAA = (BBB, BBB)
-// BBB = (AAA, ZZZ)
-// ZZZ = (ZZZ, ZZZ
-// `.trim()
+AAA = (BBB, BBB)
+BBB = (AAA, ZZZ)
+ZZZ = (ZZZ, ZZZ
+`.trim()
 
 const LEFT_INDEX = 0
 const RIGHT_INDEX = 1
 const walkThePaths = (directions, stepMap) => {
+    let directionsArray = [...directions]
     let totalSteps = 0
-    let foundZZZ = false
-    let currentNode = Object.keys(stepMap)[0]
-    console.log('Starting nodes...', currentNode)
-    console.log(stepMap, directions)
-    while(!foundZZZ) {
-        for (const direction of directions) {
-            console.log('Current Direction.........', direction)
-            if(currentNode === 'ZZZ') {
-                foundZZZ = true
-                break
-            }
-            totalSteps++
-            const paths = stepMap[currentNode]
-            const directionIndex = direction === 'R' ? RIGHT_INDEX : LEFT_INDEX
-            console.log('Direction index is..........', directionIndex)
-            currentNode = paths[directionIndex]
-        }
+    let currentNode = 'AAA'
+
+    while(currentNode !== 'ZZZ') {
+        totalSteps++
+        currentNode = stepMap[currentNode][directionsArray[0] === 'R' ? RIGHT_INDEX : LEFT_INDEX]
+        directionsArray.push(directionsArray.shift())
     }
 
     return totalSteps
@@ -49,9 +39,9 @@ const walkThePaths = (directions, stepMap) => {
 
 function getNumberOfStepsToComplete(mapInputString) {
     const {directions, ...stepMap} = mapInputString.split('\n').reduce((stepMap, s, i) => {
-        if(s === '') return stepMap
+        if(s.trim() === '') return stepMap
         if(i === 0) {
-            stepMap['directions'] = s
+            stepMap['directions'] = s.split('').filter(c => c === 'R' || c === 'L')
             return stepMap
         }
         const nodeMatches = s.matchAll(/[A-Z]+/g)
@@ -60,10 +50,10 @@ function getNumberOfStepsToComplete(mapInputString) {
         return stepMap
     }, {})
 
-    return walkThePaths(directions.split(''), stepMap)
+    return walkThePaths(directions, stepMap)
 }
 
 // console.log(getNumberOfStepsToComplete(exampleString1))
 
-// console.log(getNumberOfStepsToComplete(exampleString2))
+console.log(getNumberOfStepsToComplete(exampleString2))
 console.log(getNumberOfStepsToComplete(puzzleInput))
