@@ -95,11 +95,6 @@ function getHandDetails ([cards, bet]) {
         cardKeys[0] :
         cardKeys.sort((a, b) => cardIndexMap[b] - cardIndexMap[a])[0]
 
-    if(cards === 'TTJTT') {
-        console.log(cardKeys, highestValue)
-        console.log(cardIndexMap[highestValue])
-    }
-
     if(jokerCount) {
         // if all jokers
         if(jokerCount !== 5 && cardKeys) {
@@ -107,9 +102,6 @@ function getHandDetails ([cards, bet]) {
         } else {
             cardIndexMap['J'] = jokerCount
         }
-    }
-    if(cards === 'TTJTT') {
-        console.log(cardIndexMap[highestValue])
     }
 
     Object.keys(HAND_TYPE_MAP)
@@ -179,16 +171,8 @@ function getScoreAndRank(cards) {
 function getTotalWinnings(handsString) {
     const hands = handsString.split('\n').filter(hs => hs !== '').map(s => s.split(' '))
     const handDetails = hands.map((hand) => getHandDetails(hand))
-    console.log(hands)
     const scoresAndRanks = getScoreAndRank(handDetails)
-    console.log(scoresAndRanks.reverse().slice(0, 30))
-    // console.log(scoresAndRanks.reverse().filter(
-    //     c => c.cards.indexOf('J') >= 0 && c.handType !== '5OAK' && c.handType !== '4OAK' //&& c.handType !== 'FH' //&& c.handType != '3OAK' && c.handType !== '2P'
-    // ).slice(0, 30))
     return scoresAndRanks.reduce((sum, card) => sum + card.winnings, 0)
 }
 
 console.log(getTotalWinnings(puzzleInput))
-// console.log(getTotalWinnings(exampleString))
-
-// 252219277
