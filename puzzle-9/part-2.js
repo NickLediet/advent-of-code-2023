@@ -9,7 +9,7 @@ const exampleString1 = `
 `.trim()
 
 const exampleString2 = `
-0 3 6 9 12 -15
+10 13 16 21 30 45
 `.trim()
 
 function buildRecursiveDiffArray(array) {
@@ -36,10 +36,11 @@ function findPredicitionValuesRecursively(diffMatrix, i = 0) {
         return findPredicitionValuesRecursively(diffMatrix, i + 1)
     }
 
-    diffMatrix[currentRowIndex].push(
-        diffMatrix[currentRowIndex][diffMatrix[currentRowIndex].length - 1] + 
-        diffMatrix[lastRowIndex][diffMatrix[lastRowIndex].length - 1]
-    )
+    diffMatrix[currentRowIndex] = [
+        diffMatrix[currentRowIndex][0] - diffMatrix[lastRowIndex][0],
+        ...diffMatrix[currentRowIndex]
+    ]
+
 
     return findPredicitionValuesRecursively(diffMatrix, i + 1)
 }
@@ -53,13 +54,7 @@ function getSumOfExtrapolatedValues(valueString) {
         iv => findPredicitionValuesRecursively(buildRecursiveDiffArray([iv]))
     )
     
-    return diffMatrix.reduce((sum, history) => sum + history[0][history[0].length - 1], 0)
+    return diffMatrix.reduce((sum, history) => sum + history[0][0], 0)
 }
 
 console.log(getSumOfExtrapolatedValues(puzzleInput))
-
-// let testArray = [
-//     [1,2,3,4,5,6,7],
-//     [0,0,0,0,0,0]
-// ]
-// console.log(every(testArray[testArray.length - 1], p => p === 0))
