@@ -48,7 +48,7 @@ function getSumOfExtrapolatedValues(valueString) {
     const initialValues = valueString.split('\n').map(
         ln => Array.from(ln.matchAll(/\-?\d+/gm)).map(m => parseInt(m[0]))
     )
-    console.log(initialValues)
+
     const diffMatrix = initialValues.map(
         iv => findPredicitionValuesRecursively(buildRecursiveDiffArray([iv]))
     )
