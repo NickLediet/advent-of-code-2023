@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.21",
-    "mathjs": "^12.2.0"
+    "mathjs": "^12.2.0",
+    "queue": "^7.0.0"
   }
 }
