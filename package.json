@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watchAll"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jest": "^29.7.0",
     "lodash": "^4.17.21",
     "mathjs": "^12.2.0",
     "queue": "^7.0.0"
